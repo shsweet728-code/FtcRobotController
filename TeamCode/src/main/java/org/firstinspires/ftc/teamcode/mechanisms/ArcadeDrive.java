@@ -23,11 +23,11 @@ public class ArcadeDrive {
         rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
-    public void drive(double throttle, double spin) {
-        spin /= SPIN_DAMPING;
-        throttle /= THROTTLE_DAMPING;
-        leftPower = throttle + spin;
-        rightPower = throttle - spin;
+    public void drive(double throttle, double spin, double turbo) {
+        spin /= SPIN_DAMPING - (turbo/3);
+        throttle /= THROTTLE_DAMPING - (turbo/2);
+        leftPower = (throttle + spin);
+        rightPower = (throttle - spin);
         double largest = Math.max(Math.abs(throttle), Math.abs(spin));
         if (largest > 1.0) {
             throttle /= largest;

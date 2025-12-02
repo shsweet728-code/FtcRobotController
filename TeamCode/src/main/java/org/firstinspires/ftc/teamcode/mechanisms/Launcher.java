@@ -10,9 +10,9 @@ public class Launcher {
     //Define CONSTANTS
     private final double FEED_TIME_SECONDS = 1;
     private final double FULL_SPEED = 1.0;
-    private double LAUNCHER_TARGET_VELOCITY = 1125;
+    private double launcherTargetVelocity = 1125;
     private final double STOP_SPEED = 0.0;
-    private double LAUNCHER_MIN_VELOCITY = 1120;
+    private double launcherMinVelocity = launcherTargetVelocity - 5;
 
     // Declare variables
     private DcMotorEx launcher;
@@ -55,8 +55,8 @@ public class Launcher {
             case IDLE:
                 break;
             case SPIN_UP:
-                launcher.setVelocity(LAUNCHER_TARGET_VELOCITY);
-                if (launcher.getVelocity() >= LAUNCHER_MIN_VELOCITY) {
+                launcher.setVelocity(launcherTargetVelocity);
+                if (launcher.getVelocity() >= launcherMinVelocity) {
                     launchState = LaunchState.LAUNCH;
                 }
                 break;
@@ -81,6 +81,10 @@ public class Launcher {
         }
     }
 
+    public void spinLauncher() {
+        launcher.setVelocity(launcherTargetVelocity);
+    }
+
     public void stopLauncher() {
         stopFeeder();
         launcher.setVelocity(STOP_SPEED);
@@ -92,22 +96,22 @@ public class Launcher {
     }
 
     public double getTargetVelocity() {
-        return LAUNCHER_TARGET_VELOCITY;
+        return launcherTargetVelocity;
     }
 
     public String getState() {
         return launchState.toString();
     }
 
-    public void setTargetVelocity(double velocity) {
-        LAUNCHER_TARGET_VELOCITY += velocity;
-        LAUNCHER_MIN_VELOCITY += velocity;
+    public void changeTargetVelocity(double velocity) {
+        launcherTargetVelocity += velocity;
+        launcherMinVelocity += velocity;
         if (getVelocity() > 500) {
-            launcher.setVelocity(LAUNCHER_TARGET_VELOCITY);
+            launcher.setVelocity(launcherTargetVelocity);
         }
     }
 
     public void runLauncher() {
-        launcher.setVelocity(LAUNCHER_TARGET_VELOCITY);
+        launcher.setVelocity(launcherTargetVelocity);
     }
 }

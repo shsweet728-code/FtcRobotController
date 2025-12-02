@@ -21,7 +21,7 @@ public class TeleOpClassExample extends OpMode {
 
     @Override
     public void loop() {
-        drive.drive(-gamepad1.left_stick_y, gamepad1.right_stick_x);
+        drive.drive(-gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.left_trigger);
 
         if (gamepad1.y) {
             launcher.startLauncher();
@@ -30,14 +30,14 @@ public class TeleOpClassExample extends OpMode {
             launcher.stopLauncher();
         }
 
-        launcher.setTargetVelocity(gamepad1.right_trigger);
-        launcher.setTargetVelocity(-gamepad1.left_trigger);
+        launcher.changeTargetVelocity(gamepad1.right_trigger);
+        launcher.changeTargetVelocity(-gamepad1.left_trigger);
         /*
         if (gamepad1.right_trigger > 0.1) {
-            launcher.setTargetVelocity(gamepad1.right_trigger);
+            launcher.changeTargetVelocity(gamepad1.right_trigger);
         }
         else if (gamepad1.left_trigger > 0.1) {
-            launcher.setTargetVelocity(-gamepad1.left_trigger);
+            launcher.changeTargetVelocity(-gamepad1.left_trigger);
         }
          */
 

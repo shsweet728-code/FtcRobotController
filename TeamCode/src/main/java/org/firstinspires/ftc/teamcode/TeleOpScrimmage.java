@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.mechanisms.ArcadeDrive;
 import org.firstinspires.ftc.teamcode.mechanisms.Launcher;
@@ -9,6 +10,10 @@ import org.firstinspires.ftc.teamcode.mechanisms.RobotLed;
 
 @TeleOp
 public class TeleOpScrimmage extends OpMode {
+
+    private boolean hasLaunched = false;
+
+    private ElapsedTime runTime = new ElapsedTime();
     ArcadeDrive drive = new ArcadeDrive();
     Launcher launcher = new Launcher();
 
@@ -23,7 +28,7 @@ public class TeleOpScrimmage extends OpMode {
 
     @Override
     public void loop() {
-        drive.drive(-gamepad1.left_stick_y, gamepad1.right_stick_x);
+        drive.drive(-gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.left_trigger);
 
         if (gamepad1.y) {
             launcher.startLauncher();
@@ -31,23 +36,34 @@ public class TeleOpScrimmage extends OpMode {
         else if (gamepad1.b) {
             launcher.stopLauncher();
         }
+        else if (gamepad1.x) {
+            launcher.spinLauncher();
+        }
+        else if (gamepad1.a) {
+            runTime.reset();
+            while (runTime.seconds() < 0.5) {
+                drive.drive(-1, 0, 1);
+                if (runTime.seconds() > 0.35 && !hasLaunched) {
+                    launcher.startLauncher();
+                    hasLaunched = true;
+                }
+            }
+            hasLaunched = false;
+            runTime.reset();
+            while (runTime.seconds() < 0.5) {
+                drive.drive(1, 0, 1);
+                launcher.updateState();
+            }
+        }
 
         ledIndicator.changeColor(gamepad1.left_stick_y);
+
         if (gamepad1.right_bumper){
-            launcher.setTargetVelocity(1);
+            launcher.changeTargetVelocity(1);
         }
         else if (gamepad1.left_bumper){
-            launcher.setTargetVelocity(-1);
+            launcher.changeTargetVelocity(-1);
         }
-
-        /*
-        if (gamepad1.right_trigger > 0.1) {
-            launcher.setTargetVelocity(gamepad1.right_trigger);
-        }
-        else if (gamepad1.left_trigger > 0.1) {
-            launcher.setTargetVelocity(-gamepad1.left_trigger);
-        }
-         */
 
         launcher.updateState();
 

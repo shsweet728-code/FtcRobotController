@@ -18,7 +18,7 @@ public class AprilTagTest extends OpMode {
     public void loop() {
         //update the vision portal
         aprilTagWebcam.update();
-        AprilTagDetection id20 = aprilTagWebcam.getTagBySpecificId(20);
-        aprilTagWebcam.displayDetectionTelemetry(id20);
+        AprilTagDetection id21 = aprilTagWebcam.getTagBySpecificId(21);
+        aprilTagWebcam.displayDetectionTelemetry(id21);
     }
 }
