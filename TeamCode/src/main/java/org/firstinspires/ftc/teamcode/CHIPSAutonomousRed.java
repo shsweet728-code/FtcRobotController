@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -27,7 +26,7 @@ import org.firstinspires.ftc.teamcode.mechanisms.Launcher;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 @Autonomous(name="Robot: Auto Drive Red by LS", group="Robot")
-public class AutonomousBlue extends LinearOpMode {
+public class CHIPSAutonomousRed extends LinearOpMode {
 
     Launcher launcher = new Launcher();
 
