@@ -1,4 +1,5 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Mecanum_Bot;
+
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
@@ -7,6 +8,8 @@ import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.pedropathing.util.Timer;
+
+import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 @TeleOp
 public class PedroPathingTest extends OpMode {
@@ -23,12 +26,12 @@ public class PedroPathingTest extends OpMode {
     PathState pathState;
 
     private final Pose startPose = new Pose(21.113673805601323, 124.78418451400331, Math.toRadians(144));
-    private final Pose shootPose = new Pose(63.59143327841845, 41.21416803953872, Math.toRadians(144));
+    private final Pose shootPose = new Pose(63.59143327841845, 41.21416803953872, Math.toRadians(270));
 
-    private PathChain driveStartSquare;
+    private PathChain driveStartShoot;
 
     public void buildPath() {
-        driveStartSquare = follower.pathBuilder()
+        driveStartShoot = follower.pathBuilder()
                 .addPath(new BezierLine(startPose, shootPose))
                 .setLinearHeadingInterpolation(startPose.getHeading(), shootPose.getHeading())
                 .build();
@@ -37,23 +40,45 @@ public class PedroPathingTest extends OpMode {
     public void statePathUpdate() {
         switch(pathState) {
             case DRIVE_STARTPOS_SHOOT_POS:
-                follower.followPath(driveStartSquare, true);
-                pathState = PathState.SHOOT_PRELOAD;
+                follower.followPath(driveStartShoot, true);
+                setPathState(PathState.SHOOT_PRELOAD);
                 break;
             case SHOOT_PRELOAD:
-                if (follower.isBusy()) {
+                if (!follower.isBusy()) {
                     telemetry.addLine("Done Path 1");
                 }
+                break;
+            default:
+                telemetry.addLine("No State Commanded!");
+                break;
         }
+    }
+
+    public void setPathState(PathState newState){
+        pathState= newState;
+        pathTimer.resetTimer();
     }
 
     @Override
     public void init() {
+        pathState = PathState.DRIVE_STARTPOS_SHOOT_POS;
+        pathTimer = new Timer();
+        opModeTimer = new Timer();
+        follower = Constants.createFollower(hardwareMap);
+        buildPath();
 
+        follower.setPose(startPose);
+
+    }
+
+    public void start(){
+        opModeTimer.resetTimer();
+        setPathState(pathState);
     }
 
     @Override
     public void loop() {
-
+        follower.update();
+        statePathUpdate();
     }
 }
