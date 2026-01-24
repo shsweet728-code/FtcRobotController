@@ -1,12 +1,13 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Tank_Bot;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.mechanisms.ArcadeDrive;
 import org.firstinspires.ftc.teamcode.mechanisms.Launcher;
+import org.firstinspires.ftc.teamcode.mechanisms.MecanumDrive;
 
 /*
  * This OpMode illustrates the concept of driving a path based on time.
@@ -26,9 +27,8 @@ import org.firstinspires.ftc.teamcode.mechanisms.Launcher;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
-@Disabled
-@Autonomous(name="Robot: Auto Drive Blue Arcade by LS", group="Robot")
-public class TestAutonomousArcade extends LinearOpMode {
+@Autonomous(name="Blue Far", group="Blue")
+public class CHIPS_Auto_Blue_Far extends LinearOpMode {
 
     Launcher launcher = new Launcher();
     ArcadeDrive drive = new ArcadeDrive();
@@ -36,7 +36,7 @@ public class TestAutonomousArcade extends LinearOpMode {
     /* Declare OpMode members. */
     private ElapsedTime runTime = new ElapsedTime();
 
-    static  final long    PAUSE_TIME = 500;
+    static  final long    PAUSE_TIME = 50;
     static final double     FORWARD_SPEED = 0.5;
     static final double     TURN_SPEED    = 0.25;
 
@@ -56,7 +56,7 @@ public class TestAutonomousArcade extends LinearOpMode {
         waitForStart();
 
         // Step through each leg of the path, ensuring that the OpMode has not been stopped along the way.
-        // Step 1:  Drive forward for 3 seconds
+        // Step 1:  Drive forward off back line
         drive.drive(FORWARD_SPEED, 0, 0);
         runTime.reset();
         while (opModeIsActive() && (runTime.seconds() < 1.5)) {
@@ -66,7 +66,7 @@ public class TestAutonomousArcade extends LinearOpMode {
         drive.drive(0, 0, 0);
         sleep(PAUSE_TIME);
 
-        // Step 2:  Spin right for 1.3 seconds
+        // Step 2:  Turn right towards red tower
         drive.drive(0, -TURN_SPEED, 0);
         runTime.reset();
         while (opModeIsActive() && (runTime.seconds() < 0.75)) {
@@ -76,18 +76,17 @@ public class TestAutonomousArcade extends LinearOpMode {
         drive.drive(0, 0, 0);
         sleep(PAUSE_TIME);
 
-        // Step 1:  Drive forward for 3 seconds
+        // Step 3:  Drive forward towards red tower
         drive.drive(FORWARD_SPEED, 0, 0);
         runTime.reset();
-        while (opModeIsActive() && (runTime.seconds() < 2.9)) {
+        while (opModeIsActive() && (runTime.seconds() < 2.2)) {
             telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runTime.seconds());
             telemetry.update();
         }
         drive.drive(0, 0, 0);
         sleep(PAUSE_TIME);
 
-        drive.drive(0, 0, 0);
-        sleep(PAUSE_TIME);
+        // Step 4:  Launch ball 3 times
         for (int i = 0; i < 3; i++) {
             launcher.startLauncher();
             runTime.reset();
@@ -97,19 +96,10 @@ public class TestAutonomousArcade extends LinearOpMode {
         }
         launcher.stopLauncher();
 
-        // Step 3:  Drive Backward for 1 Second
-        drive.drive(-FORWARD_SPEED, 0, 0);
-        runTime.reset();
-        while (opModeIsActive() && (runTime.seconds() < 3.0)) {
-            telemetry.addData("Path", "Leg 3: %4.1f S Elapsed", runTime.seconds());
-            telemetry.update();
-        }
-
-        // Step 4:  Stop
+        // Step 5:  Stop
         drive.drive(0, 0, 0);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
-        sleep(PAUSE_TIME);
     }
 }
