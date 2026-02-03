@@ -26,21 +26,24 @@ public class PedroPathingRedFar extends OpMode {
         //Start Position_End Position
 
         DRIVE_STARTPOS_SHOOT_POS,
-        SHOOT_PRELOAD
+        SHOOT_PRELOAD,
+        TURN_FOR_OPMODE
     }
 
     PathState pathState;
 
-    private final Pose startPose = new Pose(21.113673805601323, 124.78418451400331, Math.toRadians(144));
-    private final Pose shootPose = new Pose(88, 8, Math.toRadians(40));
-    private final Pose finishPose = new Pose(101, 104.38220757825371, Math.toRadians(90));
+    private final Pose startPose = new Pose(88, 8, Math.toRadians(90));
+    private final Pose shootPose = new Pose(101, 104.38220757825371, Math.toRadians(40));
+    private final Pose finishPose = new Pose(80, 60, Math.toRadians(90));
 
-    private PathChain driveStartShoot;
+    private PathChain driveStartShoot,turnAfterShot;
 
     public void buildPath() {
         driveStartShoot = follower.pathBuilder()
                 .addPath(new BezierLine(startPose, shootPose))
                 .setLinearHeadingInterpolation(startPose.getHeading(), shootPose.getHeading())
+                .build();
+        turnAfterShot = follower.pathBuilder()
                 .addPath(new BezierLine(shootPose, finishPose))
                 .setLinearHeadingInterpolation(shootPose.getHeading(), finishPose.getHeading())
                 .build();
@@ -50,19 +53,28 @@ public class PedroPathingRedFar extends OpMode {
         switch(pathState) {
             case DRIVE_STARTPOS_SHOOT_POS:
                 follower.followPath(driveStartShoot, true);
-                setPathState(PathState.SHOOT_PRELOAD);
+                setPathState(PedroPathingRedFar.PathState.SHOOT_PRELOAD);
+                telemetry.addLine("Done Path 1");
                 break;
             case SHOOT_PRELOAD:
                 if (!follower.isBusy()) {
                     for (int i = 0; i < 3; i++) {
                         launcher.startLauncher();
                         runTime.reset();
-                        while (/*opModeIsActive() &&*/ (runTime.seconds() < 3)) {
+                        while (/*opModeIsActive() &&*/ (runTime.seconds() < 2)) {
                             launcher.updateState();
                         }
                     }
-                    telemetry.addLine("Done Path 1");
+                    telemetry.addLine("Done Shooting");
+                    follower.followPath(turnAfterShot, true);
+                    setPathState(PedroPathingRedFar.PathState.TURN_FOR_OPMODE);
 
+
+                }
+                break;
+            case TURN_FOR_OPMODE:
+                if (!follower.isBusy()) {
+                    telemetry.addLine("End Pose ");
                 }
                 break;
             default:
@@ -99,6 +111,11 @@ public class PedroPathingRedFar extends OpMode {
     public void loop() {
         follower.update();
         statePathUpdate();
-        drive.drive(0,0,0);
+
+        telemetry.addData("path state", pathState.toString());
+        telemetry.addData("x", follower.getPose().getX());
+        telemetry.addData("y", follower.getPose().getY());
+        telemetry.addData("heading", follower.getPose().getHeading());
+        telemetry.addData("path time", pathTimer.getElapsedTimeSeconds());
     }
 }
