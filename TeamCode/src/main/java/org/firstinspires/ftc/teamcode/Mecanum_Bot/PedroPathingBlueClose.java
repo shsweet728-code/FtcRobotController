@@ -68,15 +68,15 @@ public class PedroPathingBlueClose extends OpMode {
                     }
                     telemetry.addLine("Done Shooting");
                     setPathState(PathState.TURN_FOR_OPMODE);
+                    follower.followPath(turnAfterShot, true);
+
 
                 }
                 break;
             case TURN_FOR_OPMODE:
                 if (!follower.isBusy()) {
-                    follower.followPath(turnAfterShot, true);
+                    telemetry.addLine("End Pose ");
                 }
-                telemetry.addLine("Done Turning 1");
-                setPathState(PathState.TURN_FOR_OPMODE);
                 break;
             default:
                 telemetry.addLine("No State Commanded!");
