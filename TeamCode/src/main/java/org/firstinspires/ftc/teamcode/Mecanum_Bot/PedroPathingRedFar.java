@@ -33,7 +33,7 @@ public class PedroPathingRedFar extends OpMode {
 
     private final Pose startPose = new Pose(21.113673805601323, 124.78418451400331, Math.toRadians(144));
     private final Pose shootPose = new Pose(88, 8, Math.toRadians(40));
-    private final Pose FinishPose = new Pose(101, 104.38220757825371, Math.toRadians(90));
+    private final Pose finishPose = new Pose(101, 104.38220757825371, Math.toRadians(90));
 
     private PathChain driveStartShoot;
 
@@ -41,6 +41,8 @@ public class PedroPathingRedFar extends OpMode {
         driveStartShoot = follower.pathBuilder()
                 .addPath(new BezierLine(startPose, shootPose))
                 .setLinearHeadingInterpolation(startPose.getHeading(), shootPose.getHeading())
+                .addPath(new BezierLine(shootPose, finishPose))
+                .setLinearHeadingInterpolation(shootPose.getHeading(), finishPose.getHeading())
                 .build();
     }
 

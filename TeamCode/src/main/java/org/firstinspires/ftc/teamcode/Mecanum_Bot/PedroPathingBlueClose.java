@@ -26,22 +26,27 @@ public class PedroPathingBlueClose extends OpMode {
         //Start Position_End Position
 
         DRIVE_STARTPOS_SHOOT_POS,
-        SHOOT_PRELOAD
+        SHOOT_PRELOAD,
+        TURN_FOR_OPMODE
     }
 
     PathState pathState;
 
     private final Pose startPose = new Pose(21.113673805601323, 124.78418451400331, Math.toRadians(144));
     private final Pose shootPose = new Pose(43.176276771004936, 104.38220757825371, Math.toRadians(140));
-    private final Pose FinishPose = new Pose(43.176276771004936, 104.38220757825371, Math.toRadians(90));
+    private final Pose finishPose = new Pose(43.176276771004936, 104.38220757825371, Math.toRadians(90));
 
 
-    private PathChain driveStartShoot;
+    private PathChain driveStartShoot,turnAfterShot;
 
     public void buildPath() {
         driveStartShoot = follower.pathBuilder()
                 .addPath(new BezierLine(startPose, shootPose))
                 .setLinearHeadingInterpolation(startPose.getHeading(), shootPose.getHeading())
+                .build();
+        turnAfterShot = follower.pathBuilder()
+                .addPath(new BezierLine(shootPose, finishPose))
+                .setLinearHeadingInterpolation(shootPose.getHeading(), finishPose.getHeading())
                 .build();
     }
 
@@ -50,6 +55,7 @@ public class PedroPathingBlueClose extends OpMode {
             case DRIVE_STARTPOS_SHOOT_POS:
                 follower.followPath(driveStartShoot, true);
                 setPathState(PathState.SHOOT_PRELOAD);
+                telemetry.addLine("Done Path 1");
                 break;
             case SHOOT_PRELOAD:
                 if (!follower.isBusy()) {
@@ -60,8 +66,16 @@ public class PedroPathingBlueClose extends OpMode {
                             launcher.updateState();
                         }
                     }
-                    telemetry.addLine("Done Path 1");
+                    telemetry.addLine("Done Shooting");
+                    setPathState(PathState.TURN_FOR_OPMODE);
 
+                }
+                break;
+            case TURN_FOR_OPMODE:
+                if (!follower.isBusy()) {
+                    follower.followPath(driveStartShoot, true);
+                    telemetry.addLine("Done Turning 1");
+                    setPathState(PathState.TURN_FOR_OPMODE);
                 }
                 break;
             default:
