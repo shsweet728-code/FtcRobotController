@@ -17,7 +17,7 @@ public class MecanumFieldOrientedOpMode extends OpMode {
     Gamepad currentGamepad1 = new Gamepad();
     Gamepad previousGamepad1 = new Gamepad();
 
-    double slowDown;
+    double speedReduction;
 
     private boolean hasLaunched = false;
 
@@ -25,9 +25,14 @@ public class MecanumFieldOrientedOpMode extends OpMode {
 
     Launcher launcher = new Launcher();
 
-    boolean launcherToggle = false;
+    //Define toggles
+    boolean yToggle= false;
+    boolean bToggle= false;
+    boolean launcherToggle= false;
     boolean driveTypeToggle = false;
 
+    //Constants
+    double SPEED_REDUCTION = .7;
     MecanumDrive drive = new MecanumDrive();
 
     double forward, strafe, rotate;
@@ -45,13 +50,13 @@ public class MecanumFieldOrientedOpMode extends OpMode {
         previousGamepad1.copy(currentGamepad1);
         currentGamepad1.copy(gamepad1);
 
-        slowDown = (1-.5 * gamepad1.left_trigger);
+        speedReduction = (1-SPEED_REDUCTION * gamepad1.left_trigger);
 
-        forward = -gamepad1.left_stick_y*slowDown;
-        strafe = gamepad1.left_stick_x*slowDown;
-        rotate = gamepad1.right_stick_x*slowDown;
+        forward = -gamepad1.left_stick_y*speedReduction;
+        strafe = gamepad1.left_stick_x*speedReduction;
+        rotate = gamepad1.right_stick_x*speedReduction;
 
-
+        //Toggle drive mode between Fieldcentric and Robotcentric
         if (currentGamepad1.back && !previousGamepad1.back){
             driveTypeToggle = !driveTypeToggle;
             drive.init(hardwareMap);
@@ -67,20 +72,36 @@ public class MecanumFieldOrientedOpMode extends OpMode {
         telemetry.addData("Y pos", drive.returnPosY());
         telemetry.addData("Heading", drive.returnHeading());
 
-        //If 'y' pressed
-        if (gamepad1.y || gamepad1.right_trigger_pressed) {
+        //If 'R Trigger' pressed
+        if (gamepad1.right_trigger_pressed) {
             launcher.startLauncher();
         }
 
+        if(currentGamepad1.y && !previousGamepad1.y){
+            yToggle = !yToggle;
+            if(yToggle) {
+                launcher.setTargetVelocity(1400);
+                launcher.spinLauncher();
+                //set LED color to red
+            }
+            else{
+                launcher.setTargetVelocity(1250);
+                launcher.spinLauncher();
+                //set LED color to blue
+            }
+        }
+
+
         //If 'b' pressed, toggle switch
         if (currentGamepad1.b && !previousGamepad1.b) {
-            launcherToggle = !launcherToggle;
-        }
-        if (launcherToggle){
-            launcher.spinLauncher();
-        }
-        else {
-            launcher.stopLauncher();
+            bToggle = !bToggle;
+            if(bToggle) {
+                launcher.spinLauncher();
+            }
+            else{
+                launcher.stopLauncher();
+            }
+
         }
 
         //If 'x' pressed
@@ -109,10 +130,10 @@ public class MecanumFieldOrientedOpMode extends OpMode {
         telemetry.addData("Target Velocity", launcher.getTargetVelocity());
         telemetry.addData("Launcher Velocity", launcher.getVelocity());
         if(driveTypeToggle){
-            telemetry.addData("Robotcentric", driveTypeToggle);
+            telemetry.addData("Fieldcentric", driveTypeToggle);
         }
         else {
-            telemetry.addData("Fieldcentric", !driveTypeToggle);
+            telemetry.addData("Robotcentric", !driveTypeToggle);
         }
 
     }
