@@ -26,6 +26,7 @@ public class MecanumFieldOrientedOpMode extends OpMode {
     Launcher launcher = new Launcher();
 
     boolean launcherToggle = false;
+    boolean driveTypeToggle = false;
 
     MecanumDrive drive = new MecanumDrive();
 
@@ -51,8 +52,16 @@ public class MecanumFieldOrientedOpMode extends OpMode {
         rotate = gamepad1.right_stick_x*slowDown;
 
 
-
-        drive.driveFieldRelative2(forward, strafe,rotate);
+        if (currentGamepad1.back && !previousGamepad1.back){
+            driveTypeToggle = !driveTypeToggle;
+            drive.init(hardwareMap);
+        }
+        if(driveTypeToggle) {
+            drive.driveFieldRelative2(forward, strafe, rotate);
+        }
+        else {
+            drive.drive(forward,strafe,rotate);
+        }
 
         telemetry.addData("X pos", drive.returnPosX());
         telemetry.addData("Y pos", drive.returnPosY());
@@ -73,7 +82,7 @@ public class MecanumFieldOrientedOpMode extends OpMode {
         else {
             launcher.stopLauncher();
         }
-        
+
         //If 'x' pressed
         if (gamepad1.x) {
 
@@ -99,6 +108,12 @@ public class MecanumFieldOrientedOpMode extends OpMode {
         telemetry.addData("State", launcher.getState());
         telemetry.addData("Target Velocity", launcher.getTargetVelocity());
         telemetry.addData("Launcher Velocity", launcher.getVelocity());
+        if(driveTypeToggle){
+            telemetry.addData("Robotcentric", driveTypeToggle);
+        }
+        else {
+            telemetry.addData("Fieldcentric", !driveTypeToggle);
+        }
 
     }
 }
