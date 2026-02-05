@@ -1,17 +1,16 @@
 package org.firstinspires.ftc.teamcode.Mecanum_Bot;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.mechanisms.Launcher;
 import org.firstinspires.ftc.teamcode.mechanisms.MecanumDrive;
 
 @TeleOp
-public class MecanumFieldOrientedOpMode extends OpMode {
+public class MecanumTeleOpMode
+        extends OpMode {
 
 
     Gamepad currentGamepad1 = new Gamepad();
