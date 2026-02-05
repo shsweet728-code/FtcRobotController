@@ -32,9 +32,9 @@ public class PedroPathingBlueFar extends OpMode {
 
     PathState pathState;
 
-    private final Pose startPose = new Pose(56, 8, Math.toRadians(90));
-    private final Pose shootPose = new Pose(43.176276771004936, 104.38220757825371, Math.toRadians(140));
-    private final Pose finishPose = new Pose(55, 60, Math.toRadians(90));
+    private final Pose startPose = new Pose(56, 12, Math.toRadians(90));
+    private final Pose shootPose = new Pose(43.176276771004936, 104.38220757825371, Math.toRadians(145));
+    private final Pose finishPose = new Pose(55, 60, Math.toRadians(180));
 
     private PathChain driveStartShoot,turnAfterShot;
 

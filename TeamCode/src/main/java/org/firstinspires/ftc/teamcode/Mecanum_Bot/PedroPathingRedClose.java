@@ -34,7 +34,7 @@ public class PedroPathingRedClose extends OpMode {
 
     private final Pose startPose = new Pose(121, 124.78418451400331, Math.toRadians(46));
     private final Pose shootPose = new Pose(101, 104.38220757825371, Math.toRadians(40));
-    private final Pose finishPose = new Pose(80, 60, Math.toRadians(90));
+    private final Pose finishPose = new Pose(80, 60, Math.toRadians(0));
 
     private PathChain driveStartShoot,turnAfterShot;
 

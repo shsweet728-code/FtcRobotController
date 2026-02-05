@@ -34,7 +34,7 @@ public class PedroPathingBlueClose extends OpMode {
 
     private final Pose startPose = new Pose(21.113673805601323, 124.78418451400331, Math.toRadians(144));
     private final Pose shootPose = new Pose(43.176276771004936, 104.38220757825371, Math.toRadians(140));
-    private final Pose finishPose = new Pose(55.176276771004936, 60, Math.toRadians(90));
+    private final Pose finishPose = new Pose(55.176276771004936, 60, Math.toRadians(180));
 
 
     private PathChain driveStartShoot,turnAfterShot;
